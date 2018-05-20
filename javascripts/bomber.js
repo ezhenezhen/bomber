@@ -1,8 +1,8 @@
 $(document).ready(function () {
-  // disable right click on page
-  // $(this).bind("contextmenu", function (e) {
-  //   e.preventDefault();
-  // });
+  disable right click on page
+  $(this).bind("contextmenu", function (e) {
+    e.preventDefault();
+  });
   field = new Field();
   field.generateField();
   field.generateBombs();
