@@ -1,70 +1,64 @@
 class Bomber
-  STATES = { blank: 1, opened: 2, flagged: 3, question: 4 }
+  attr_accessor :field
 
-  def initialize(field_size, mines_quantity)
-    field = Field.new(field_size, mines_quantity);
+  def initialize(field_size, bombs_quantity)
+    @field = Field.new(field_size, bombs_quantity)
+    @field.draw_field
   end
-
-  # private
-
-  # def update_spots_opened
-  #   # spotsOpened++;
-  #   # if (spotsOpened === 9 * 9 - 9)
-  #   #   win();
-  # end
-
-  # def getRandomInt(min, max)
-  #   # return Math.floor(Math.random() * (max - min)) + min;
-  # end
-
-  # def getRandomSpot(maxWidth, maxHeight)
-  #   # return [getRandomInt(0,maxWidth),getRandomInt(0,maxHeight)];
-  # end
-
-  # def isPositionValid?(position)
-  #   # return position[0] >= 0 && position[0] < 9 && position[1] >= 0 && position[1] < 9;
-  # end
-  
-  # def win
-  # end
-
-  # def lose
-  # end
 end
 
 class Field
-  def initialize(field_size)
-    Field.generateField(field_size, mines_quantity)
-    Field.updateNeighboursAdjacentBombs();
-    Field.render();
+  attr_reader :spots
+
+  def initialize(field_size, bombs_quantity)
+    @field_size = field_size
+    @bombs_quantity = bombs_quantity
+    @spots = self.generateField
   end
 
-  def generateField(field_size)
+  def generateField
     field = []
 
-    field_size()
+    @field_size.times do |i|
+      0.upto(@field_size - 1) do |j|
+        field << Spot.new([i, j])
+      end
+    end
+
+    have_bombs = []
+
+    while have_bombs.length < @bombs_quantity
+      r = rand(@field_size * @field_size - 1)
+      have_bombs << r unless have_bombs.include?(r)
+    end
+
+    have_bombs.each do |bomb|
+      field[bomb].has_bomb = true
+    end
+
+    field
   end
 
-  # def self.updateNeighboursAdjacentBombs
-  # end
+  def draw_field
+    result = ''
+    
+    @spots.each do |s|
+      (s.coordinates.last == @field_size - 1) ? (result << "[ ]\n") : (result << "[ ]")
+    end
 
-  # def self.render
-  # end
-
-  # private
-
+    puts result
+  end
 end
 
 class Spot
-  def initialize()
+  attr_accessor :status, :has_bomb, :coordinates
+
+  def initialize(coordinates)
+    @coordinates = coordinates
+    @status = 'closed'
+    @has_bomb = false
   end
-
-  def self.reveal
-  end
-
-  def self.put_flag
-  end
-
-  private
-
 end
+
+
+b = Bomber.new 10, 5
