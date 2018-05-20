@@ -13,10 +13,10 @@ class Field
   def initialize(field_size, bombs_quantity)
     @field_size = field_size
     @bombs_quantity = bombs_quantity
-    @spots = self.generateField
+    @spots = self.generate_field
   end
 
-  def generateField
+  def generate_field
     field = []
 
     @field_size.times do |i|
@@ -39,37 +39,22 @@ class Field
 
     # count quantity of adjacent bombs
     field.each do |spot|
-      candidates_for_count = []
+      objects_for_count = []
 
       (-1..1).each do |i|
         (-1..1).each do |j|
-          candidates_for_count << [] spot.coordinates.first 
+          field.each do |cell|
+            if (spot.coordinates == [cell.coordinates.first + i, cell.coordinates.last + j])
+              objects_for_count << cell if cell.has_bomb
+            end
+          end
         end
       end
 
+      spot.quantity_of_adjacent_bombs = objects_for_count.length
     end
 
     field
-
-
-  var list = [];
-  for (var i = -1; i <= 1; i++) {
-    for (var j = -1; j <= 1; j++) {
-      var pos = [this.position[0] + i, this.position[1] + j];
-      if (isPositionValid(pos))
-        list.push(pos);
-    }
-  }
-
-
-
-
-
-    private
-
-    def have_valid_coordinates?(coordinates)
-      coordinates[0] >= 0 && coordinates[0] < @field_size && coordinates[1] >= 0 && coordinates[1] < @field_size
-    end
   end
 
   def draw_field
