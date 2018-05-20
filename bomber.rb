@@ -23,30 +23,13 @@ class Bomber
     puts "The end."
   end
 
+  # todo...
   def open_spot_and_adjacent_empty_fields(coordinates)
-    spots_to_check = []
-
     field.spots.each do |spot|
       if spot.coordinates == coordinates
         spot.status = 'opened' 
-        spots_to_check << spot
       end
     end
-
-    # (-1..1).each do |i|
-    #   (-1..1).each do |j|
-    #     field.each do |cell|
-    #       if (spot.coordinates == [cell.coordinates.first + i, cell.coordinates.last + j])
-    #         objects_for_count << cell if cell.has_bomb
-    #       end
-    #     end
-    #   end
-    # end
-
-    # while spots_to_check.length > 0
-
-      # spots_to_check.shift
-    # end
   end
 end
 
