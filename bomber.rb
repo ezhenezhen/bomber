@@ -13,7 +13,7 @@ class Bomber
     @field.draw_field
 
     until @won || @lost
-      puts 'enter coordinates separeted by comma'
+      puts 'enter coordinates separated by comma'
       coordinates = gets.chomp.split(',').map { |i| i.to_i - 1 }
       self.open_spot_and_adjacent_empty_fields(coordinates)
 
