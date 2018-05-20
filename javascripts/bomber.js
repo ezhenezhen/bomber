@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  disable right click on page
+  // disable right click on page
   $(this).bind("contextmenu", function (e) {
     e.preventDefault();
   });
