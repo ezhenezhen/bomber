@@ -1,9 +1,52 @@
 class Bomber
-  attr_accessor :field
+  attr_accessor :field, :won, :lost
 
   def initialize(field_size, bombs_quantity)
-    @field = Field.new(field_size, bombs_quantity)
+    @field_size = field_size
+    @bombs_quantity = bombs_quantity
+    @won = false
+    @lost = false
+  end
+
+  def play
+    @field = Field.new(@field_size, @bombs_quantity)
     @field.draw_field
+
+    until @won || @lost
+      puts 'enter coordinates separeted by comma'
+      coordinates = gets.chomp.split(',').map { |i| i.to_i - 1 }
+      self.open_spot_and_adjacent_empty_fields(coordinates)
+
+      @field.draw_field
+    end
+
+    puts "The end."
+  end
+
+  def open_spot_and_adjacent_empty_fields(coordinates)
+    spots_to_check = []
+
+    field.spots.each do |spot|
+      if spot.coordinates == coordinates
+        spot.status = 'opened' 
+        spots_to_check << spot
+      end
+    end
+
+    # (-1..1).each do |i|
+    #   (-1..1).each do |j|
+    #     field.each do |cell|
+    #       if (spot.coordinates == [cell.coordinates.first + i, cell.coordinates.last + j])
+    #         objects_for_count << cell if cell.has_bomb
+    #       end
+    #     end
+    #   end
+    # end
+
+    # while spots_to_check.length > 0
+
+      # spots_to_check.shift
+    # end
   end
 end
 
@@ -80,22 +123,29 @@ class Spot
   end
 
   def translate_spot
-    empty_field = '[ ]'
+    closed_field    = '[O]'
+    empty_field     = '[ ]'
     field_with_bomb = '[*]'
-    clicked_bomb = '[X]'
-    bombs_quantity = "[#{self.quantity_of_adjacent_bombs}]"
+    clicked_bomb    = '[X]'
+    marked_as_bomb  = '[!]'
+    bombs_quantity  = "[#{self.quantity_of_adjacent_bombs}]"
 
     result = ''
 
-    if self.has_bomb
-      result << field_with_bomb
-    else
-      self.quantity_of_adjacent_bombs > 0 ? result << bombs_quantity : result << empty_field
+    if self.status == 'closed'
+      result << closed_field
+    end
+
+    if self.status == 'opened'
+      if self.has_bomb
+        result << field_with_bomb
+      else
+        self.quantity_of_adjacent_bombs > 0 ? result << bombs_quantity : result << empty_field
+      end
     end
 
     result
   end
 end
 
-
-b = Bomber.new 10, 5
+b = Bomber.new(10, 5).play
